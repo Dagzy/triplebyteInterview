@@ -1,26 +1,71 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, {Component} from 'react';
 import './App.css';
-
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
-
+import 'bootstrap/dist/css/bootstrap.min.css';
+import Panel from './components/Panel';
+import {Container, Row} from 'react-bootstrap';
+class App extends Component {
+  constructor() {
+    super()
+    this.state = {
+      cards: [
+        {
+          who: "Maggie",
+          tasks: [
+            {
+              done: false,
+              task: "Dishes"
+            }, {
+              done: false,
+              task: "Get Milk"
+            },{
+              done: false,
+              task: "Find Waldo"
+            }
+          ]
+        }, {
+          who: "Thomas",
+          tasks: [
+            {
+              done: false,
+              task: "Get Eggs"
+            }
+          ]
+        }, {
+          who: "Quincy",
+          tasks: [
+            {
+              done: false,
+              task: "Drop Off Donations"
+            }
+          ]
+        }, {
+          who: "Heather",
+          tasks: [
+            {
+              done: false,
+              task: "Make Smoothies"
+            }
+          ]
+        }
+      ]
+    };
+  };
+  cardColumn() {
+    return this
+      .state
+      .cards
+      .map((element, i) => {
+        return <Panel cards={element} key={i}/>
+      });
+  }
+  render() {
+    return (
+      <Container>
+        <Row>
+          {this.cardColumn()}
+        </Row>
+      </Container>
+    );
+  };
+};
 export default App;
