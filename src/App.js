@@ -2,53 +2,52 @@ import React, {Component} from 'react';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Panel from './components/Panel';
-import {Container, Row} from 'react-bootstrap';
+import {Container, Row, Col} from 'react-bootstrap';
+import Navbar from './components/Navbar'
 class App extends Component {
   constructor() {
     super()
     this.state = {
-      cards: [
-        {
-          who: "Maggie",
-          tasks: [
-            {
-              done: false,
-              task: "Dishes"
-            }, {
-              done: false,
-              task: "Get Milk"
-            },{
-              done: false,
-              task: "Find Waldo"
-            }
-          ]
-        }, {
-          who: "Thomas",
-          tasks: [
-            {
-              done: false,
-              task: "Get Eggs"
-            }
-          ]
-        }, {
-          who: "Quincy",
-          tasks: [
-            {
-              done: false,
-              task: "Drop Off Donations"
-            }
-          ]
-        }, {
-          who: "Heather",
-          tasks: [
-            {
-              done: false,
-              task: "Make Smoothies"
-            }
-          ]
-        }
-      ]
+      cards: [],
+      newOwner: ""
     };
+    this.newOwnerInput = (e) => {
+      this.setState({newOwner: e.target.value})
+    }
+    this.makeOwner = () => {
+      fetch(`http://localhost:4000/cards/addOwner/${this.state.newOwner}`)
+      .then(res => res.json())
+      .then(data=>{
+        this.makeCardList(data)
+      });
+    }
+    this.makeCardList = (data) => {
+      let ph = {};
+      let temp = [];
+      data.map((element, i) => {
+        ph[element.owner] = {
+          tasks: []
+        };
+      });
+      data.map((element, i) => {
+        ph[element.owner]
+          .tasks
+          .push({task: element.task, done: element.done, _id: element._id});
+      });
+      for (const key in ph) {
+        temp.push({who: key, cardInfo: ph[key]});
+      }
+      this.setState({cards: temp});
+    }
+  };
+
+  componentDidMount() {
+    fetch('http://localhost:4000/cards/')
+      .then(res => res.json())
+      .then(data => {
+        console.log(data);
+        this.makeCardList(data)
+      });
   };
   cardColumn() {
     return this
@@ -61,6 +60,7 @@ class App extends Component {
   render() {
     return (
       <Container>
+      <Navbar />
         <Row>
           {this.cardColumn()}
         </Row>
