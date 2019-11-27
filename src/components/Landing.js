@@ -1,18 +1,39 @@
 import React, {Component} from 'react';
-import {Container, Row, Col} from 'react-bootstrap';
-
+import {Button} from 'react-bootstrap';
+import RegisterUser from './MakeUser';
+import Login from './Login';
 class LandingPage extends Component {
     constructor() {
         super()
-        this.state = {}
-    }
+        this.state = {
+            toggle: false
+        }
+        this.toggle = () => {
+            this.setState({
+                toggle: !this.state.toggle
+            });
+        };
+    };
     render() {
         return (
             <div>
-                <h1>
-                    Welcome to the Triplebyte Kanban Board
-                </h1>
-                
+                <div style = {{ display : this.state.toggle ? "none" : "initial" }}>
+                    <p>Register Below:</p>
+                    <RegisterUser />
+                    <p>Already have an account?
+                        <Button onClick = { this.toggle }>
+                            Click To Login!
+                        </Button>
+                    </p>
+                </div>
+                <div style = {{ display : this.state.toggle ? "initial" : "none" }}>
+                    Log In Below:
+                    <Login getCards = { this.props.getCards } />
+                    Need to make an account?
+                    <Button onClick = { this.toggle }>
+                        Click To Register!
+                    </Button>
+                </div>
             </div>
         )
     }

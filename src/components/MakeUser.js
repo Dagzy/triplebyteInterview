@@ -1,10 +1,16 @@
 import React, {Component} from 'react';
-import {Row, Col} from 'react-bootstrap';
-
-class MakeUser extends Component{
+import {Button} from 'react-bootstrap';
+// this.makeOwner = () => {
+//     fetch(`http://localhost:4000/cards/addOwner/${this.state.newOwner}`)
+//     .then(res => res.json())
+//     .then(data=>{
+//       this.makeCardList(data)
+//     });
+//   }
+class RegisterUser extends Component{
     constructor(){
         super();
-        this.state = {}
+        this.state = {message:{}}
         this.onChange = (e) => {
             this.setState({
                 [e.target.id] : e.target.value
@@ -15,11 +21,21 @@ class MakeUser extends Component{
             const state = this.state;
             if(!state.newUserName){
                 this.setState({
-                    message: "Enter A Username"
+                    message: {
+                        text:"Enter A Username",
+                        color:"blue"
+                    }
                 })
             }else if(state.newUserPassword !== state.confirmNewUserPassword){
                 this.setState({
                     message: "Password And Confirm Password Must Match"
+                })
+            }else{
+                fetch(`http://localhost:4000/users/register/${state.newUserName}/${state.newUserPassword}`).then(res => res.json()).then(data => {
+                    console.log(data)
+                    this.setState({
+                        message:data
+                    })
                 })
             }
         }
@@ -27,15 +43,15 @@ class MakeUser extends Component{
     render(){
         return(
             <div>   
-                <form>
-                    <p>{this.state.message}</p>
+                <form onSubmit={this.onSubmit}>
+                    <p style={{backgroundColor:this.state.message.color}}>{this.state.message.text}</p>
                     <label htmlFor="newUserName">Username:</label>
-                    <input id="newUserName" type="text"/>
+                    <input onChange={this.onChange} id="newUserName" type="text"/>
                     <label htmlFor="newUserPassword">Password:</label>
-                    <input id="newUserPassword" type="password"/>
+                    <input onChange={this.onChange} id="newUserPassword" type="password"/>
                     <label htmlFor="confirmNewUserPassword"> Confirm Password:</label>
-                    <input id="confirmNewUserPassword" type="password"/>
-                    
+                    <input onChange={this.onChange} id="confirmNewUserPassword" type="password"/>
+                    <Button type="submit">Add Owner!</Button>
                 </form>
             {/*    <Row>
                 <Col xs={2}>
@@ -53,4 +69,4 @@ class MakeUser extends Component{
         )
     }
 }
-export default MakeUser;
+export default RegisterUser;

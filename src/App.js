@@ -2,25 +2,17 @@ import React, {Component} from 'react';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Panel from './components/Panel';
-import {Container, Row, Col} from 'react-bootstrap';
-import Navbar from './components/Navbar'
+import {Container, Row} from 'react-bootstrap';
+import Navbar from './components/Navbar';
+import Landing from './components/Landing';
 class App extends Component {
   constructor() {
     super()
     this.state = {
-      cards: [],
-      newOwner: ""
+      cards : [],
+      loggedIn : false
     };
-    this.newOwnerInput = (e) => {
-      this.setState({newOwner: e.target.value})
-    }
-    this.makeOwner = () => {
-      fetch(`http://localhost:4000/cards/addOwner/${this.state.newOwner}`)
-      .then(res => res.json())
-      .then(data=>{
-        this.makeCardList(data)
-      });
-    }
+
     this.makeCardList = (data) => {
       let ph = {};
       let temp = [];
@@ -39,15 +31,25 @@ class App extends Component {
       }
       this.setState({cards: temp});
     }
-  };
-
-  componentDidMount() {
-    fetch('http://localhost:4000/cards/')
+    this.getCards = () => {
+      fetch('http://localhost:4000/cards/')
       .then(res => res.json())
       .then(data => {
         console.log(data);
         this.makeCardList(data)
       });
+    }
+  };
+
+  componentDidMount() {
+    let loggedIn = window.localStorage.getItem("authorized");
+    if(loggedIn){
+      this.setState({
+        loggedIn : true
+      });
+      this.getCards()
+      console.log("TING",this.state);
+    };
   };
   cardColumn() {
     return this
@@ -56,11 +58,14 @@ class App extends Component {
       .map((element, i) => {
         return <Panel cards={element} key={i}/>
       });
-  }
+  };
   render() {
     return (
       <Container>
       <Navbar />
+      <div style={{display: this.state.loggedIn ? "none" : "initial"}} >
+      <Landing getCards={this.getCards} />
+      </div>
         <Row>
           {this.cardColumn()}
         </Row>

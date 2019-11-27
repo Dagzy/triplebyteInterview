@@ -12,6 +12,7 @@ app.use(cors());
 app.use(bodyParser());
 app.use(bodyParser.urlencoded({extended:true}));
 app.use('/cards', require('./routes/cards.routes'));
+app.use('/users', require('./routes/user.routes'));
 app.listen(PORT, (err)=>{
     console.log(`${ err ? err : "No errors"} /|/ Listening on port: ${PORT}`);
 });

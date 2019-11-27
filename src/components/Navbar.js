@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
-import {Row, Col, Navbar} from 'react-bootstrap';
-import MakeUser from './MakeUser';
+import {Navbar} from 'react-bootstrap';
 class KanbanNav extends Component {
     constructor(){
         super()
@@ -13,8 +12,6 @@ class KanbanNav extends Component {
         return(
             <Navbar>
             <h1>Triplebyte Kanban</h1>
-
-                <MakeUser />
             </Navbar>
         )
     }
